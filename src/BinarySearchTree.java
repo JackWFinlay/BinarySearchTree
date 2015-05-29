@@ -1,73 +1,74 @@
 /**
  * Created by jack on 19/05/15.
  */
-public class BinarySearchTree {
+public class BinarySearchTree<E extends Comparable<E>> {
 
-
-
-    protected BinarySearchTree parent,left,right;
-    protected String name;
-    protected int mark;
+    BinaryTree<E> root;
+    int size;
 
     public BinarySearchTree(){
-        left = null;
-        right = null;
-        name = null;
-        mark = 0;
-
+        root = new BinaryTree<E>();
+        size = 0;
     }
 
-    public BinarySearchTree(String name, int mark){
-        this.left = null;
-        this.right = null;
+    public void add(E value, int mark) {
+        BinaryTree<E> addLoc = locate(root, value);
+        if (value.compareTo((E) addLoc.getName()) == 0) {
+            return;
+        }
 
-        this.name = name;
-        this.mark = mark;
+        BinaryTree<E> newNode = new BinaryTree<E>((String) value, mark);
 
+        if (root.isEmpty()) {
+            root = newNode;
+        } else {
+            if (value.compareTo((E) addLoc.getName()) > 0) {
+                addLoc.setRight(newNode);
+            } else {
+                addLoc.setLeft(newNode);
+            }
+        }
     }
 
-    public BinarySearchTree getParent() {
-        return parent;
+    public E remove(E value) {
+        return (E) "";
     }
 
-    public void setParent(BinarySearchTree parent) {
-        this.parent = parent;
+    public boolean contains(E value) {
+        if (root.isEmpty()) {
+            return false;
+        }
+        BinaryTree<E> loc = locate(root, value);
+        return value.equals(loc.getName());
     }
 
-    public BinarySearchTree getLeft() {
-        return left;
+    public E get(E value) {
+        if (root.isEmpty()) {
+            return null;
+        }
+
+        BinaryTree<E> loc = locate(root, value);
+        if (!value.equals(loc.getName())) {
+            return null;
+        } else {
+            return (E) loc.getName();
+        }
     }
 
-    public void setLeft(BinarySearchTree left) {
-        this.left = left;
-        left.setParent(this);
+    protected BinaryTree<E> locate(BinaryTree<E> root, E val) {
+        E rootVal = (E) root.getName();
+        BinaryTree<E> child;
+
+        if (rootVal.equals(val)) {
+            return root;
+        }
+        if (val.compareTo(rootVal) < 0) {
+            child = root.getLeft();
+        } else {
+            child = root.getRight();
+        }
+        if (child.isEmpty()) return root;
+        else return locate(child, val);
     }
-
-    public BinarySearchTree getRight() {
-        return right;
-    }
-
-    public void setRight(BinarySearchTree right) {
-        this.right = right;
-        right.setParent(this);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getMark() {
-        return mark;
-    }
-
-    public void setMark(int mark) {
-        this.mark = mark;
-    }
-
-
 
 }
