@@ -14,7 +14,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
     public void add(E value, int mark) {
         BinaryTree<E> addLoc = locate(root, value);
         if (value.compareTo((E) addLoc.getName()) == 0) {
-            return;
+            value = (E) (value + "(1)");
         }
 
         BinaryTree<E> newNode = new BinaryTree<E>((String) value, mark);
@@ -30,8 +30,80 @@ public class BinarySearchTree<E extends Comparable<E>> {
         }
     }
 
-    public E remove(E value) {
-        return (E) "";
+    public E search(E k) {
+        if (!contains(k)) {
+            return null;
+        }
+
+        BinaryTree<E> t = locate(root, k);
+        return (E) ((Integer) t.getMark());
+    }
+
+    public boolean change(E k, int v) {
+        if (!contains(k)) {
+            return false;
+        }
+
+        BinaryTree<E> toChange = locate(root, k);
+        toChange.setMark(v);
+        return true;
+    }
+
+    public void remove(E v) {
+        //Remove the first occurrence of v
+        if (!contains(v)) {
+            return;
+        }
+
+        BinaryTree<E> locNode = locate(root, v);
+        // Find the first occurrence of v
+        if (locNode.equals(root)) {
+            root = removeNode(locNode);
+        } else if (locNode.equals(locNode.getParent().getLeft())) {
+            locNode.getParent().setLeft(removeNode(locNode));
+        } else {
+            locNode.getParent().setRight(removeNode(locNode));
+        }
+    }
+
+    public BinaryTree<E> removeNode(BinaryTree<E> k) { // Return the resulting tree after k is removed
+        if (k.getLeft().isEmpty() && k.getRight().isEmpty())
+            return new BinaryTree<>();
+        else if (k.getLeft().isEmpty())
+            return k.getRight();
+        else if (k.getRight().isEmpty())
+            return k.getLeft();
+        else {
+            BinaryTree<E> pre = predecessor(k);
+            pre.getParent().setRight(pre.getLeft());
+            BinaryTree<E> le = k.getLeft();
+            BinaryTree<E> ri = k.getRight();
+            k.setLeft(new BinaryTree<E>());
+            k.setRight(new BinaryTree<E>());
+            pre.setLeft(le);
+            pre.setRight(ri);
+            return pre;
+        }
+    }
+
+    public BinaryTree<E> predecessor(BinaryTree<E> k) {
+        BinaryTree<E> left = k.getLeft();
+
+        BinaryTree<E> predecessor = maximumValue(left);
+
+        return predecessor;
+    }
+
+    public BinaryTree<E> maximumValue(BinaryTree<E> k) {
+        if (k == null) {
+            return null;
+        }
+
+        if (k.getRight() != null) {
+            return maximumValue(k.getRight());
+        }
+
+        return k;
     }
 
     public boolean contains(E value) {
