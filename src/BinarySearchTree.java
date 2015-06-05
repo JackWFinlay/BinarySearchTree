@@ -49,10 +49,10 @@ public class BinarySearchTree<E extends Comparable<E>> {
         return true;
     }
 
-    public void remove(E v) {
+    public boolean remove(E v) {
         //Remove the first occurrence of v
         if (!contains(v)) {
-            return;
+            return false;
         }
 
         BinaryTree<E> locNode = locate(root, v);
@@ -64,6 +64,8 @@ public class BinarySearchTree<E extends Comparable<E>> {
         } else {
             locNode.getParent().setRight(removeNode(locNode));
         }
+
+        return true;
     }
 
     public BinaryTree<E> removeNode(BinaryTree<E> k) { // Return the resulting tree after k is removed
